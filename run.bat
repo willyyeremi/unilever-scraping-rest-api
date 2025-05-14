@@ -1,7 +1,6 @@
 @echo off
 
-call .\container\run-docker.bat
 python -m pip install virtualenv
-python -m virtualenv ./api/.venv
-.\api\.venv\Scripts\python.exe -m pip install -r ./api/requirements.txt
-.\api\.venv\Scripts\python.exe ./api/main.py
+python -m virtualenv ./.venv
+.\.venv\Scripts\python.exe -m pip install -r ./requirements.txt
+.\.venv\Scripts\python.exe ./main.py
