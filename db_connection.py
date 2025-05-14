@@ -9,7 +9,7 @@ driver_dict = {
 
 def create_url(ordinal: int, database_product: str):
     driver = driver_dict[database_product]
-    with open('./api/shared/credential.json', 'r') as f:
+    with open('./credential.json', 'r') as f:
         data = json.load(f)
     data = data.get(str(ordinal))
     url_object = URL.create(
