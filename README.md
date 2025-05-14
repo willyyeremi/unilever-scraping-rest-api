@@ -1,3 +1,5 @@
-# Unilever Scrapper: REST API v1
-This project for doing CRUD operation scrapped or processed data in database.
-Just run run.bat to set up the API and run it.
+# Unilever Scraping: REST API v1
+This project is for doing CRUD operations on scraped or processed data in the database.
+
+## Precaution
+Run run.bat to set up the API requirement and run main.py.
