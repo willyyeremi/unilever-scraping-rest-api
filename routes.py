@@ -5,9 +5,9 @@ from db_connection import engine
 from db_crud import read_raw_scrap_data
 
 
-data = Blueprint("data", __name__)
+data_bp = Blueprint("data", __name__, url_prefix = "/data")
 
-@data.route("/", methods = ["GET"])
+@data_bp.route("/raw-scrap-data", methods = ["GET"])
 def get_raw_scrap_data():
     try:
         page = int(request.args.get("page", 1))
@@ -16,18 +16,18 @@ def get_raw_scrap_data():
         filters = request.args.to_dict()
         filters.pop("page", None)
         filters.pop("limit", None)
-        games = read_raw_scrap_data(connection_engine = engine, limit = limit, offset = offset, **filters)
+        products = read_raw_scrap_data(connection_engine = engine, limit = limit, offset = offset, **filters)
         result = []
-        for game in games:
+        for product in products:
             result.append({
-                "id": game.id,
-                "name": game.name,
-                "detail": game.detail,
-                "price": game.price,
-                "originalprice": game.originalprice,
-                "discountpercentage": game.discountpercentage,
-                "platform": game.platform,
-                "createdate": game.createdate.isoformat() if game.createdate else None
+                "id": product.id,
+                "name": product.name,
+                "detail": product.detail,
+                "price": product.price,
+                "originalprice": product.originalprice,
+                "discountpercentage": product.discountpercentage,
+                "platform": product.platform,
+                "createdate": product.createdate.isoformat() if product.createdate else None
             })
         return jsonify({
             "page": page,
