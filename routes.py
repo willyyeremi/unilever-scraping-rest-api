@@ -1,11 +1,23 @@
 from flask import Blueprint, jsonify, request
+from sqlalchemy import create_engine
 from sqlalchemy.exc import SQLAlchemyError
 
-from db_connection import engine
+from db_connection import create_url
 from db_crud import read_raw_scrap_data
 
 
+##############################
+# common used variable
+##############################
+
+url = create_url(ordinal = 1, database_product = "postgresql")
+engine = create_engine(url)
 data_bp = Blueprint("data", __name__, url_prefix = "/data")
+
+
+##############################
+# routing function
+##############################
 
 @data_bp.route("/raw-scrap-data", methods = ["GET"])
 def get_raw_scrap_data():
@@ -27,7 +39,7 @@ def get_raw_scrap_data():
                 "originalprice": product.originalprice,
                 "discountpercentage": product.discountpercentage,
                 "platform": product.platform,
-                "createdate": product.createdate.isoformat() if product.createdate else None
+                "createdate": product.createdate.isoformat()
             })
         return jsonify({
             "page": page,
