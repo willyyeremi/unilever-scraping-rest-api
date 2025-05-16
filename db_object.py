@@ -1,8 +1,16 @@
 from sqlalchemy import Column, Integer, String, Date, Float
 from sqlalchemy.orm import declarative_base
 
+##############################
+# common used variable
+##############################
 
 base = declarative_base()
+
+
+##############################
+# table on schema: public
+##############################
 
 class raw_scrap_data(base):
     __tablename__ = 'raw_scrap_data'
