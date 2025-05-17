@@ -1,6 +1,6 @@
 from flask import Blueprint, jsonify, request
+from flask_jwt_extended import jwt_required
 from sqlalchemy import create_engine
-from sqlalchemy.exc import SQLAlchemyError
 
 from db_connection import create_url
 from db_crud import read_raw_scrap_data
@@ -12,6 +12,7 @@ from db_crud import read_raw_scrap_data
 
 url = create_url(ordinal = 1, database_product = "postgresql")
 engine = create_engine(url)
+
 data_bp = Blueprint("data", __name__, url_prefix = "/data")
 
 
@@ -20,6 +21,7 @@ data_bp = Blueprint("data", __name__, url_prefix = "/data")
 ##############################
 
 @data_bp.route("/raw-scrap-data", methods = ["GET"])
+@jwt_required()
 def get_raw_scrap_data():
     try:
         page = int(request.args.get("page", 1))
@@ -28,7 +30,7 @@ def get_raw_scrap_data():
         filters = request.args.to_dict()
         filters.pop("page", None)
         filters.pop("limit", None)
-        products = read_raw_scrap_data(connection_engine = engine, limit = limit, offset = offset, **filters)
+        products = read_raw_scrap_data(connection_engine = engine, limit = limit, offset = offset, filters = filters)
         result = []
         for product in products:
             result.append({
@@ -46,5 +48,5 @@ def get_raw_scrap_data():
             "limit": limit,
             "data": result
         })
-    except SQLAlchemyError as e:
+    except Exception as e:
         return jsonify({"error": str(e)}), 500

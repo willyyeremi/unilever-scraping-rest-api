@@ -3,13 +3,13 @@ import requests
 
 BASE_API_URL = "http://127.0.0.1:5011"
 
-def get_data_v1(page, limit, **kwargs):
+def get_data_v1(page, limit, filters):
     try:
         params = {
             "page": page,
             "limit": limit
         }
-        params.update(kwargs)
+        params.update(filters)
         response = requests.get(f"{BASE_API_URL}/data/raw-scrap-data", params = params)
         response.raise_for_status()
         data = response.json()
@@ -23,4 +23,7 @@ def get_data_v1(page, limit, **kwargs):
 
 
 if __name__ == "__main__":
-    get_data_v1(page = 1, limit = 5, id = 1)
+    filters = {
+        "id_lt": 3
+    }
+    get_data_v1(page = 1, limit = 5, filters = filters)
