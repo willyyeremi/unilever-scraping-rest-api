@@ -1,4 +1,6 @@
 sqlalchemy
 psycopg2
 Flask
+Flask-JWT-Extended
 requests
+python-dotenv
