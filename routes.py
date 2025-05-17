@@ -3,7 +3,7 @@ from flask_jwt_extended import jwt_required
 from sqlalchemy import create_engine
 
 from db_connection import create_url
-from db_crud import read_raw_scrap_data
+from db_crud import read_raw_scrap_data, delete_raw_scrap_data
 
 
 ##############################
@@ -48,5 +48,17 @@ def get_raw_scrap_data():
             "limit": limit,
             "data": result
         })
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
+@data_bp.route("/raw-scrap-data", methods = ["DELETE"])
+@jwt_required()
+def delete_method_raw_scrap_data():
+    try:
+        filters = request.args.to_dict()
+        if len(filters) == 0:
+            return jsonify({"msg": "Please specify delete filters"}), 401
+        delete_raw_scrap_data(connection_engine = engine, filters = filters)
+        return jsonify({"msg": "Delete success"}), 200
     except Exception as e:
         return jsonify({"error": str(e)}), 500
