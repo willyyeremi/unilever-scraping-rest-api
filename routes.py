@@ -56,6 +56,8 @@ def get_raw_scrap_data():
 def delete_method_raw_scrap_data():
     try:
         filters = request.args.to_dict()
+        if len(filters) == 0:
+            return jsonify({"msg": "Please specify delete filters"}), 401
         delete_raw_scrap_data(connection_engine = engine, filters = filters)
         return jsonify({"msg": "Delete success"}), 200
     except Exception as e:
