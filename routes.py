@@ -27,9 +27,7 @@ def get_raw_scrap_data():
         page = int(request.args.get("page", 1))
         limit = int(request.args.get("limit", 100))
         offset = (page - 1) * limit
-        filters = request.args.to_dict()
-        filters.pop("page", None)
-        filters.pop("limit", None)
+        filters = request.get_data()
         products = read_raw_scrap_data(connection_engine = engine, limit = limit, offset = offset, filters = filters)
         result = []
         for product in products:
