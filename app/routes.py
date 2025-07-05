@@ -3,7 +3,7 @@ from flask_jwt_extended import jwt_required
 from sqlalchemy import create_engine
 
 from db_connection import create_url
-from db_crud import read_raw_scrap_data, delete_raw_scrap_data
+from db_crud import create_raw_scrap_data, read_raw_scrap_data, update_raw_scrap_data, delete_raw_scrap_data
 
 
 ##############################
@@ -19,6 +19,16 @@ data_bp = Blueprint("data", __name__, url_prefix = "/data")
 ##############################
 # routing function
 ##############################
+
+@data_bp.route("/raw-scrap-data", methods = ["POST"])
+@jwt_required()
+def post_raw_scrap_data():
+    try:
+        data = request.get_data()
+        create_raw_scrap_data(connection_engine = engine, data = data)
+        return jsonify({"msg": "Insert success"}), 200
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
 
 @data_bp.route("/raw-scrap-data", methods = ["GET"])
 @jwt_required()
@@ -48,6 +58,11 @@ def get_raw_scrap_data():
         })
     except Exception as e:
         return jsonify({"error": str(e)}), 500
+
+@data_bp.route("/raw-scrap-data", methods = ["put"])
+@jwt_required()
+def put_raw_scrap_data():
+    raise NotImplementedError
 
 @data_bp.route("/raw-scrap-data", methods = ["DELETE"])
 @jwt_required()

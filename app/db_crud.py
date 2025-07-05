@@ -1,6 +1,6 @@
 import operator
 
-from sqlalchemy import create_engine, delete, or_, and_
+from sqlalchemy import create_engine, update, delete, or_, and_
 from sqlalchemy.orm import Session
 
 from db_object import raw_scrap_data
@@ -61,6 +61,19 @@ def filter_process(table_object, filters):
 # table main.raw_scrap_data
 ##############################
 
+def create_raw_scrap_data(connection_engine, data):
+    with Session(autocommit = False, autoflush = False, bind = connection_engine) as session:
+        new_data = raw_scrap_data(
+            name = data["name"],
+            detail = data["detail"],
+            price = data["price"],
+            originalprice = data["originalprice"],
+            discountpercentage = data["discountpercentage"],
+            platform = data["platform"]
+        )
+        session.add(new_data)
+        session.commit()
+
 def read_raw_scrap_data(connection_engine, limit: int, offset: int, filters):
     with Session(autocommit = False, autoflush = False, bind = connection_engine) as session:
         filters_statement = filter_process(raw_scrap_data, filters)
@@ -69,6 +82,9 @@ def read_raw_scrap_data(connection_engine, limit: int, offset: int, filters):
             stmt = stmt.filter(*filters_statement)
         result = stmt.limit(limit).offset(offset)
         return result
+
+def update_raw_scrap_data(connection_engine, filters, **kwargs):
+    raise NotImplementedError
 
 def delete_raw_scrap_data(connection_engine, filters: dict):
     with Session(autocommit = False, autoflush = False, bind = connection_engine) as session:
