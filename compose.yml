@@ -1,0 +1,45 @@
+name: unilever-scraping
+
+services:
+  rest-api-v1:
+    build: 
+      context: . 
+      dockerfile: ./dockerfile
+    image:
+      unilever-scraping-rest-api
+    container_name: unilever-scraping-rest-api-v1
+    ports:
+      - "5011:5011"
+    volumes:
+      - ./app:/home/project_home/project_workdir
+    working_dir: /home/project_home/project_workdir
+    command: >
+      bash -c "
+      gunicorn --bind 0.0.0.0:5011 main_v1:app
+      "
+    networks:
+      - shared-network
+
+  rest-api-v2:
+    build: 
+      context: . 
+      dockerfile: ./dockerfile
+    image:
+      unilever-scraping-rest-api
+    container_name: unilever-scraping-rest-api-v2
+    ports:
+      - "5012:5012"
+    volumes:
+      - ./app:/home/project_home/project_workdir
+    working_dir: /home/project_home/project_workdir
+    command: >
+      bash -c "
+      gunicorn --bind 0.0.0.0:5012 main_v2:app
+      "
+    networks:
+      - shared-network
+
+networks:
+  shared-network:
+    name: unilever-scraping-network
+    external: true
