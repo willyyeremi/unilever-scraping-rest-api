@@ -3,7 +3,7 @@ import operator
 from sqlalchemy import create_engine, update, delete, or_, and_
 from sqlalchemy.orm import Session
 
-from db_object import raw_scrap_data
+from db_object import tr_raw_scrap_data
 from db_connection import create_url
 
 
@@ -58,12 +58,12 @@ def filter_process(table_object, filters):
 
 
 ##############################
-# table main.raw_scrap_data
+# table main.tr_raw_scrap_data
 ##############################
 
-def create_raw_scrap_data(connection_engine, data):
+def create_tr_raw_scrap_data(connection_engine, data):
     with Session(autocommit = False, autoflush = False, bind = connection_engine) as session:
-        new_data = raw_scrap_data(
+        new_data = tr_raw_scrap_data(
             name = data["name"],
             detail = data["detail"],
             price = data["price"],
@@ -74,22 +74,22 @@ def create_raw_scrap_data(connection_engine, data):
         session.add(new_data)
         session.commit()
 
-def read_raw_scrap_data(connection_engine, limit: int, offset: int, filters):
+def read_tr_raw_scrap_data(connection_engine, limit: int, offset: int, filters):
     with Session(autocommit = False, autoflush = False, bind = connection_engine) as session:
-        filters_statement = filter_process(raw_scrap_data, filters)
-        stmt = session.query(raw_scrap_data)
+        filters_statement = filter_process(tr_raw_scrap_data, filters)
+        stmt = session.query(tr_raw_scrap_data)
         if filters_statement:
             stmt = stmt.filter(*filters_statement)
         result = stmt.limit(limit).offset(offset)
         return result
 
-def update_raw_scrap_data(connection_engine, filters, **kwargs):
+def update_tr_raw_scrap_data(connection_engine, filters, **kwargs):
     raise NotImplementedError
 
-def delete_raw_scrap_data(connection_engine, filters: dict):
+def delete_tr_raw_scrap_data(connection_engine, filters: dict):
     with Session(autocommit = False, autoflush = False, bind = connection_engine) as session:
-        filters_statement = filter_process(raw_scrap_data ,filters)
-        stmt = delete(raw_scrap_data).where(*filters_statement)
+        filters_statement = filter_process(tr_raw_scrap_data ,filters)
+        stmt = delete(tr_raw_scrap_data).where(*filters_statement)
         session.execute(stmt)
         session.commit()
 
@@ -115,7 +115,7 @@ if __name__ == "__main__":
             },
         },
     }
-    products = read_raw_scrap_data(engine, 5, 0, filters)
+    products = read_tr_raw_scrap_data(engine, 5, 0, filters)
     result = []
     for product in products:
         result.append({
@@ -130,4 +130,4 @@ if __name__ == "__main__":
         })
     for item in result:
         print(item)
-    delete_raw_scrap_data(engine, filters)
+    delete_tr_raw_scrap_data(engine, filters)

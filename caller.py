@@ -10,7 +10,7 @@ def get_data_v1(page, limit, filters):
             "limit": limit
         }
         params.update(filters)
-        response = requests.get(f"{BASE_API_URL}/data/raw-scrap-data", params = params)
+        response = requests.get(f"{BASE_API_URL}/data/tr-raw-scrap-data", params = params)
         response.raise_for_status()
         data = response.json()
         print(f"Menampilkan halaman {data['page']} (limit {data['limit']}):\n")

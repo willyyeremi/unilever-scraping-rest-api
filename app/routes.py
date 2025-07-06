@@ -3,7 +3,7 @@ from flask_jwt_extended import jwt_required
 from sqlalchemy import create_engine
 
 from db_connection import create_url
-from db_crud import create_raw_scrap_data, read_raw_scrap_data, update_raw_scrap_data, delete_raw_scrap_data
+from db_crud import create_tr_raw_scrap_data, read_tr_raw_scrap_data, update_tr_raw_scrap_data, delete_tr_raw_scrap_data
 
 
 ##############################
@@ -20,25 +20,25 @@ data_bp = Blueprint("data", __name__, url_prefix = "/data")
 # routing function
 ##############################
 
-@data_bp.route("/raw-scrap-data", methods = ["POST"])
+@data_bp.route("/tr-raw-scrap-data", methods = ["POST"])
 @jwt_required()
-def post_raw_scrap_data():
+def method_post_tr_raw_scrap_data():
     try:
         data = request.get_data()
-        create_raw_scrap_data(connection_engine = engine, data = data)
+        create_tr_raw_scrap_data(connection_engine = engine, data = data)
         return jsonify({"msg": "Insert success"}), 200
     except Exception as e:
         return jsonify({"error": str(e)}), 500
 
-@data_bp.route("/raw-scrap-data", methods = ["GET"])
+@data_bp.route("/tr-raw-scrap-data", methods = ["GET"])
 @jwt_required()
-def get_raw_scrap_data():
+def method_get_tr_raw_scrap_data():
     try:
         page = int(request.args.get("page", 1))
         limit = int(request.args.get("limit", 100))
         offset = (page - 1) * limit
         filters = request.get_data()
-        products = read_raw_scrap_data(connection_engine = engine, limit = limit, offset = offset, filters = filters)
+        products = read_tr_raw_scrap_data(connection_engine = engine, limit = limit, offset = offset, filters = filters)
         result = []
         for product in products:
             result.append({
@@ -59,19 +59,19 @@ def get_raw_scrap_data():
     except Exception as e:
         return jsonify({"error": str(e)}), 500
 
-@data_bp.route("/raw-scrap-data", methods = ["put"])
+@data_bp.route("/tr-raw-scrap-data", methods = ["put"])
 @jwt_required()
-def put_raw_scrap_data():
+def method_put_tr_raw_scrap_data():
     raise NotImplementedError
 
-@data_bp.route("/raw-scrap-data", methods = ["DELETE"])
+@data_bp.route("/tr-raw-scrap-data", methods = ["DELETE"])
 @jwt_required()
-def delete_method_raw_scrap_data():
+def method_delete_tr_raw_scrap_data():
     try:
         filters = request.args.to_dict()
         if len(filters) == 0:
             return jsonify({"msg": "Please specify delete filters"}), 401
-        delete_raw_scrap_data(connection_engine = engine, filters = filters)
+        delete_tr_raw_scrap_data(connection_engine = engine, filters = filters)
         return jsonify({"msg": "Delete success"}), 200
     except Exception as e:
         return jsonify({"error": str(e)}), 500

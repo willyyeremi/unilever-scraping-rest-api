@@ -12,8 +12,8 @@ base = declarative_base()
 # table on schema: public
 ##############################
 
-class raw_scrap_data(base):
-    __tablename__ = 'raw_scrap_data'
+class tr_raw_scrap_data(base):
+    __tablename__ = 'tr_raw_scrap_data'
     __table_args__ = {'schema': 'main'}
     id = Column(Integer, primary_key = True)
     name = Column(String)
